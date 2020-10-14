@@ -1,37 +1,37 @@
 <img alt="Proffy" src="../github/proffy-logo.png">
 <p align="center">
-    <a href="#">Sobre o Projeto</a> •
-    <a href="#">Status</a> •
-    <a href="#">Capturas de Tela</a> •
-    <a href="#">Como executar</a> •
-    <a href="#">Tecnologias</a>
+    <a href="#computer-sobre-o-projeto">Sobre o Projeto</a> •
+    <a href="#satellite-status">Status</a> •
+    <a href="#camera-capturas-de-tela">Capturas de Tela</a> •
+    <a href="#gear-como-executar">Como executar</a> •
+    <a href="#alien-tecnologias">Tecnologias</a>
 </p>
 
 <hr>
 
-## 💻 Sobre o Projeto
+## :computer: Sobre o Projeto
 A plataforma tem como objetivo auxiliar estudantes e professores, possibilitando agendar uma aula particular de uma determinada área. Projeto desenvolvido na **1ª edição do NLW**.
 
 <hr>
 
-## Status
+## :satellite: Status
 <p align="center">
     🎉 Proffy 1.1 em processo de finalização 🎉
 </p>
 
 <hr>
 
-## Capturas de Tela
-<a align="center">
-    <img src="../github/proffy-dar-aulas.png">
-    <img src="../github/proffy-estudar.png">
-    <img src="../github/proffy-landing.png">
-    <img src="../github/proffy-login.png">
-</a>
+## :camera: Capturas de Tela
+<p align="center">
+    <img width="450px" src="../github/proffy-dar-aulas.png">
+    <img width="450px" src="../github/proffy-estudar.png">
+    <img width="450px" src="../github/proffy-landing.png">
+    <img width="450px" src="../github/proffy-login.png">
+</p>
 
 <hr>
 
-## Como Executar
+## :gear: Como Executar
 ```
 # Clone este repositório
 $ git clone https://github.com/Jonatan966/Projetos-NLW
@@ -53,7 +53,7 @@ $ yarn start
 
 <hr>
 
-## Tecnologias
+## :alien: Tecnologias
 As seguintes tecnologias foram utilizadas durante o desenvolvimento do projeto:
 - HTML5
 - CSS3
