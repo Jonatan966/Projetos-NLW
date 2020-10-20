@@ -5,11 +5,11 @@
 </h1>
 
 <p align="center">
-    <a href="">Sobre o Repositório</a> •
-    <a href="">Status</a> •
-    <a href="">Demonstrações</a> •
-    <a href="">Tecnologias</a> •
-    <a href="">Licença</a>
+    <a href="#-sobre-o-repositório">Sobre o Repositório</a> •
+    <a href="#-status">Status</a> •
+    <a href="#-demonstrações">Demonstrações</a> •
+    <a href="#-tecnologias">Tecnologias</a> •
+    <a href="#-licença">Licença</a>
 </p>
 
 <br>
