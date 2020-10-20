@@ -40,8 +40,8 @@ export default function CreateOrphanage() {
 
     const selectedImages = Array.from(event.target.files);
 
-    setImages(selectedImages);
-
+    setImages(images.concat(selectedImages));
+    
     const selectedImagesPreview = selectedImages.map(image => {
       return URL.createObjectURL(image);
     });
