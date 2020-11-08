@@ -6,7 +6,9 @@ import cors from 'cors';
 import './database/connection';
 import routes from './routes';
 import errorHandler from './errors/handler';
+import {config} from 'dotenv';
 
+config();
 const app = express();
 
 app.use(cors());

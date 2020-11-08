@@ -1,2 +1,5 @@
 Criar Migration:
 yarn typeorm migration:create -n <nome_da_migration>
+
+Carregar Migrations:
+yarn typeorm migration:run

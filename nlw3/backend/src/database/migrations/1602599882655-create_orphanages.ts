@@ -42,9 +42,28 @@ export class createOrphanages1602599882655 implements MigrationInterface {
                     type: 'varchar'
                 },
                 {
+                    name: 'pending',
+                    type: 'boolean',
+                    default: false
+                },
+                {
+                    name: 'user_id',
+                    type: 'varchar',
+                    isNullable: false
+                },
+                {
                     name: 'open_on_weekends',
                     type: 'boolean',
                     default: false
+                }
+            ],
+            foreignKeys: [
+                {
+                    name: 'OrphanagePublisher',
+                    columnNames: ['user_id'],
+                    referencedTableName: 'users',
+                    referencedColumnNames: ['id'],
+                    onDelete: 'CASCADE'
                 }
             ]
         }));
