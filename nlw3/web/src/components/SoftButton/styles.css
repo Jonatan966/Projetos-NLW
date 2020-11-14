@@ -1,0 +1,26 @@
+.soft-button {
+    width: 48px;
+    height: 48px;
+    margin: 5px;
+
+    border: 0;
+  
+    background: #12AFCB;
+    border-radius: 16px;
+  
+    cursor: pointer;
+  
+    transition: background-color 0.2s;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.soft-button:hover {
+    background: #17D6EB;
+}
+
+.soft-button.selected {
+    background: #FFD666;
+}

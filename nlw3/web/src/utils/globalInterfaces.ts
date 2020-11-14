@@ -1,6 +1,11 @@
-export interface OrphanageProps {
+export interface Orphanage {
     id: number;
+    name: string;
     latitude: number;
     longitude: number;
-    name: string;
+    about?: string;
+    instructions?: string;
+    opening_hours?: string;
+    open_on_weekends?: boolean;
+    images?: object[];
 }
