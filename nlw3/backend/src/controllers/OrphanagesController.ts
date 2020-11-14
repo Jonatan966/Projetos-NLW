@@ -1,48 +1,72 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { getRepository } from 'typeorm';
 import orphanageView from '../views/orphanagesView';
+import orphanageCardsView from '../views/orphanageCardsView';
 import * as Yup from 'yup';
 
 import Orphanage from '../models/Orphanage';
 import { NewRequest } from '../config/globalInterfaces';
-import User from '../models/User';
 
 export default {
-    async index(request: Request, response: Response) {
+    async index(request: NewRequest, response: Response) {
         const orphanagesRepository = getRepository(Orphanage);
+        let orphanages = [] as Orphanage[];
+        let where = {pending: false} as any;
 
-        const orphanages = await orphanagesRepository.find({
+        if (request.user) {
+            if (request.query.my) {
+                where = {
+                    pending: !!request.query.pending,
+                    user: request.user?.id
+                }
+            }
+            else if (request.user?.admin) {
+                where = {
+                    pending: !!request.query.pending
+                };       
+            }
+            else return response.json([]);
+        }
+
+        orphanages = await orphanagesRepository.find({
             relations: ['images'],
-            where: {pending: false},
-        });
+            where
+        });        
 
-        return response.json(orphanageView.renderMany(orphanages));
+        if (request.query.complete) {
+            return response.json(orphanageView.renderMany(orphanages));
+        }
+        return response.json(orphanageCardsView.renderMany(orphanages));
     },
 
-    async userList(request: NewRequest, response: Response) {
-        const orphanagesRepository = getRepository(Orphanage);
-
-        const orphanages = await orphanagesRepository.find({
-            relations: ['images'],
-            where: {user_id: request.userId, pending: !!request.query.pending},
-        });
-
-        return response.json(orphanageView.renderMany(orphanages));
-    },
-
-    async show(request: Request, response: Response) {
+    async show(request: NewRequest, response: Response) {
         const { id } = request.params;
-
         const orphanagesRepository = getRepository(Orphanage);
+        let where = {pending: false} as any;
+
+        if (request.user) {
+            if (request.user.admin) {
+                where = {};
+            }
+            else {
+                where = {
+                    user: request.user?.id
+                };
+            }
+        }
 
         const orphanage = await orphanagesRepository.findOne(id, {
             relations: ['images'],
-            where: {pending: false},
+            where
         });
 
         if (orphanage) {
-            return response.json(orphanage);
+            if (request.query.complete) {
+                return response.json(orphanageView.render(orphanage));
+            }
+            return response.json(orphanageCardsView.render(orphanage));    
         }
+
         return response.json({});
     },
 
@@ -70,9 +94,10 @@ export default {
             longitude,
             about,
             instructions,
-            user_id: request.userId,
+            user: request.user?.id,
             opening_hours,
             open_on_weekends: open_on_weekends === 'true',
+            pending: !request.user?.admin,
             images
         };
 
@@ -96,17 +121,21 @@ export default {
         })
 
         const orphanage = orphanagesRepository.create(data);
+
+        const coiso = await orphanagesRepository.save(orphanage);
     
-        await orphanagesRepository.save(orphanage);
-    
-        return response.status(201).json(orphanage);
+        return response.status(201).json(coiso);
     },
 
     async edit(request: NewRequest, response: Response) {
         const orphanagesRepository = getRepository(Orphanage);
         const id = request.params.id;
 
-        const orphanage = await orphanagesRepository.findOne(id, {where: {user_id: request.userId}});
+        const orphanage = await orphanagesRepository.findOne(id, {
+            where: {
+                user: request.user?.id
+            }
+        });
 
         if(orphanage) {
             const {
@@ -118,16 +147,16 @@ export default {
                 opening_hours,
                 open_on_weekends
             } = request.body;
-            
+
             let requestImages = request.files as Express.Multer.File[];
 
             if (!requestImages) {
                 requestImages = [];
             }
 
-            const images = requestImages.map(image => {
-                return { path: image.filename };
-            });
+            // const images = requestImages.map(image => {
+            //     return { path: image.filename };
+            // });
     
             const data = {
                 id: Number(id),
@@ -137,8 +166,8 @@ export default {
                 about,
                 instructions,
                 opening_hours,
-                open_on_weekends: open_on_weekends === 'true',
-                images
+                open_on_weekends: !!open_on_weekends,
+                /*images*/
             };
                 
             let orphanage = orphanagesRepository.create(data);
@@ -153,8 +182,16 @@ export default {
 
     async delete(req: NewRequest, res: Response) {
         const orphanagesRepository = getRepository(Orphanage);
+        let where = {
+            user: req.user?.id, 
+            pending: false
+        } as any;
 
-        const orphanage = await orphanagesRepository.findOne(req.params.id, {where: {user_id: req.userId}});
+        if (req.user?.admin) {
+            where = {};
+        }
+
+        const orphanage = await orphanagesRepository.findOne(req.params.id, {where});
 
         if (orphanage) {
             await orphanagesRepository.delete(orphanage);
@@ -167,9 +204,8 @@ export default {
 
     async approve(req: NewRequest, res: Response) {
         const orphanagesRepository = getRepository(Orphanage);
-        const user = await getRepository(User).findOne(req.userId);
-
-        if (user?.admin) {
+        
+        if (req.user?.admin) {
             let orphanage = await orphanagesRepository.findOne(req.params.id);
             
             if (orphanage) {
@@ -180,9 +216,13 @@ export default {
     
                     return res.sendStatus(200);
                 }
-                return res.status(500).json({message: 'This orphanage is already approved.'});    
+                return res.status(500).json({
+                    message: 'This orphanage is already approved.'
+                });    
             }
-            return res.status(500).json({message: 'Orphanage not found.'});    
+            return res.status(500).json({
+                message: 'Orphanage not found.'
+            });    
         }
         return res.sendStatus(401);
     }

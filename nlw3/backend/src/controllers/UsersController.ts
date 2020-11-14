@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import * as Yup from 'yup';
 import bcrypt from 'bcrypt';
-import { NewRequest } from '../config/globalInterfaces';
 
+import { NewRequest } from '../config/globalInterfaces';
 import User from '../models/User';
 
 export default {
@@ -30,10 +30,8 @@ export default {
     async delete(req: NewRequest, res: Response) {
         const userRepository = getRepository(User);
         
-        const user = await userRepository.findOne(req.userId);
-
-        if (user) {
-            await userRepository.delete(user);
+        if (req.user) {
+            await userRepository.delete(req.user);
 
             return res.sendStatus(200);
         }

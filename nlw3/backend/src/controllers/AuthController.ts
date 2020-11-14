@@ -22,7 +22,7 @@ export default {
             const user = await getRepository(User).findOne((decoded as {id: string}).id);
 
             if (user) {
-                req.userId = user.id;
+                req.user = user;
 
                 return nxt();    
             }
@@ -45,7 +45,7 @@ export default {
             }
 
             return res.json({
-                email: user.email,
+                user: {email: user.email},
                 token: jwt.sign({id: user.id}, (process.env as EnvProps).SECRET_KEY, {expiresIn: "7d"})
             });
           } catch (err) {

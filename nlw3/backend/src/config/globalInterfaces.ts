@@ -5,6 +5,9 @@ export interface EnvProps extends NodeJS.ProcessEnv {
 }
 
 export interface NewRequest extends Request {
-    userId?: string;
+    user?: {
+        id: string;
+        admin: boolean;
+    };
 }
 

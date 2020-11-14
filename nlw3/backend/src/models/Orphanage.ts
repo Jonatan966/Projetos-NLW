@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 
 import Image from './Images';
 import User from './User';
@@ -11,10 +11,10 @@ export default class Orphanage {
     @Column()
     name: string;
 
-    @Column()
+    @Column('decimal', {precision: 18, scale: 11})
     latitude: number;
 
-    @Column()
+    @Column('decimal', {precision: 18, scale: 11})
     longitude: number;
 
     @Column()
@@ -23,12 +23,10 @@ export default class Orphanage {
     @Column()
     instructions: string;
 
-    @Column({name: 'user_id'})
-    @OneToOne(() => User, {
+    @ManyToOne(() => User, user => user.orphanages, {
         cascade: ['remove']
     })
-    @JoinColumn()
-    user_id: string;
+    user: User;
 
     @Column()
     opening_hours: string;
@@ -39,9 +37,6 @@ export default class Orphanage {
     @Column({default: true})
     pending: boolean;
 
-    @OneToMany(() => Image, image => image.orphanage, {
-        cascade: ['insert', 'update']
-    })
-    @JoinColumn({ name: 'orphanage_id' })
+    @OneToMany(() => Image, image => image.orphanage, {cascade: true})
     images: Image[];
 }

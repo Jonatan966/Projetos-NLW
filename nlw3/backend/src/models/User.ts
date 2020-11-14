@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import Orphanage from "./Orphanage";
 
 @Entity('users')
 export default class User {
@@ -13,4 +14,7 @@ export default class User {
 
     @Column({default: false})
     admin: boolean;
+
+    @OneToMany(() => Orphanage, orphanage => orphanage.user)
+    orphanages: Orphanage[];
 }
